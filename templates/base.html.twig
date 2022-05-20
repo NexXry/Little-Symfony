@@ -16,21 +16,12 @@
     <body>
        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="#!">MAXI TSHIRT & SHOES</a>
+                <a class="navbar-brand" href={{path('app_index')}}>MAXI TSHIRT & SHOES</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
-                            </ul>
-                        </li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href={{path('app_index')}}>Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href={{path('app_index_about')}}>About</a></li> 
                     </ul>
                     <form class="d-flex">
                         <button class="btn btn-outline-dark" type="submit">
@@ -39,6 +30,36 @@
                             <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                         </button>
                     </form>
+                    <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item">
+                        {% if is_granted('ROLE_USER')%}
+                            <a class="btn btn-outline-dark" href="{{ path('app_profil') }}">
+                                <i class="bi-user-circle-fill me-1"></i>
+                                Profil
+                             </a>
+                             <a class="btn btn-outline-dark" href="{{ path('app_logout') }}">
+                                <i class="bi-user-circle-fill me-1"></i>
+                                logout
+                             </a>
+
+                        {% elseif  is_granted('ROLE_ADMIN') %}
+                            <a class="btn btn-outline-dark" href="{{ path('app_backOff') }}">
+                                <i class="bi-user-circle-fill me-1"></i>
+                                BackOffice
+                             </a>
+                             <a class="btn btn-outline-dark" href="{{ path('app_logout') }}">
+                                <i class="bi-user-circle-fill me-1"></i>
+                                logout
+                             </a>
+                        {% else %}
+                            <a class="btn btn-outline-dark" href="{{ path('app_login') }}">
+                                <i class="bi-user-circle-fill me-1"></i>
+                                Login
+                             </a>
+                        {% endif %}
+                        
+                    </li>
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -52,5 +73,8 @@
             </div>
         </header>
         {% block body %}{% endblock %}
+           <footer class="py-5 bg-dark">
+            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Maxi tshirt & shores 2022</p></div>
+        </footer>
     </body>
 </html>

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+        <section class='container my-5'>
+
+                <div class=''>
+                        <h1 class="text-center">About Us</h1>
+                        <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">MAXI TSHIRT & SHOES</h1>
+        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+        <p>
+          <a href={{path("app_index")}} class="btn btn-primary my-2">Get a tshirt</a>
+          <a href={{path("app_index")}} class="btn btn-secondary my-2">Get a shoes</a>
+        </p>
+      </div>
+    </div>
+                </div>
+
+        </section>
+
+{% endblock %}

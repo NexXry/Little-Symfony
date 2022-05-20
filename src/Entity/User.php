@@ -4,11 +4,13 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+class User implements UserInterface,PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -24,11 +26,18 @@ class User implements UserInterface
     #[ORM\Column(type: 'string', length: 255,unique: true)]
     private $email;
 
+    #[ORM\Column(type: 'json')]
+    private $roles = [];
+
     #[ORM\Column(type: 'string', length: 255)]
     private $password;
 
     #[ORM\Column(type: 'date')]
     private $CreatedAt;
+
+    public function __construct() {
+        $this->setCreatedAt();
+    }
 
     public function getId(): ?int
     {
@@ -88,15 +97,17 @@ class User implements UserInterface
         return $this->CreatedAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $CreatedAt): self
+    public function setCreatedAt(): self
     {
-        $this->CreatedAt = $CreatedAt;
+        $this->CreatedAt = new \DateTime();
 
         return $this;
     }
     public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        $roles = $this->roles;
+    
+        return array_unique($roles);
     }
 
     public function getSalt()
