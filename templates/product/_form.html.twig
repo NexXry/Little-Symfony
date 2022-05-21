@@ -1,0 +1,50 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+{{ form_end(form) }}
+
+
+<script>
+
+    window.onload = function() {
+        var categ = document.querySelector('#form_Category');
+
+    categ.addEventListener("change",function(e) {
+        var form = this.closest('form');
+        var value =  parseInt(this.value)+1;
+        var data = this.name + '=' + value;
+        
+        fetch(form.action,{
+            method: 'POST',
+            body: data,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            }
+        }).then(function(response) {
+            return response.text();
+        }).then(function(html) {
+            var content = document.createElement('html');
+            content.innerHTML = html;
+            if(value === 1){
+            if(document.querySelector("#form_shoesSizes") != null){
+                document.querySelector("#form_shoesSizes").remove()
+            } 
+            var nouveau = content.querySelector('#form_tshirtSizes');
+            } else{
+                if(document.querySelector("#form_tshirtSizes") != null){
+                document.querySelector("#form_tshirtSizes").remove()
+            } 
+            var nouveau = content.querySelector('#form_shoesSizes');
+            }
+        
+      
+            
+            document.querySelector('#form_Category').after(nouveau);
+            
+        });
+
+
+        })
+   
+    } // form_Sizes
+    
+</script>

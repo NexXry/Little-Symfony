@@ -21,6 +21,10 @@ class Sizes
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'Sizes')]
     private $products;
 
+    #[ORM\ManyToOne(targetEntity: CategoryProdcut::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private $category;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -69,4 +73,22 @@ class Sizes
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->name;    
+    }
+
+    public function getCategory(): ?CategoryProdcut
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?CategoryProdcut $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
 }
