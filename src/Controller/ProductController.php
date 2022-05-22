@@ -28,17 +28,20 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Choice;
 
 #[Route('/backoffice/product')]
 class ProductController extends AbstractController
 {
 
-    private $sizes;
+    private $tshirtsizes;
+    private $shoessizes;
     private $isFirstLoad;
 
-    public function __construct(SizesRepository $sizes)
+    public function __construct(TshirtSizesRepository $tshirtsizes,ShoesSizesRepository $shoessizes)
     {
-        $this->sizes = $sizes;
+        $this->tshirtsizes = $tshirtsizes;
+        $this->shoessizes = $shoessizes;
         $this->isFirstLoad = true;
     }
 
@@ -239,15 +242,153 @@ class ProductController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Product $product, ProductRepository $productRepository): Response
+    public function edit(Request $request, Product $product, ProductRepository $productRepository,KeyWordsRepository $keyWordsRepository, TshirtSizesRepository $tshirtSizesRepository,ShoesSizesRepository $shoesSizesRepository, CategoryProdcutRepository $categoryProdcutRepository): Response
     {
-        $form = $this->createForm(ProductType::class, $product);
-        $form->handleRequest($request);
+        $prePoppulate = null;
+        if ($request->get('form') != null) {
+                $prePoppulate = $request->get('form')["Category"] ?? null;
+        }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $form = $this->createFormBuilder([
+            "Category" => $product->getCategory(),
+            "name" => $product->getName(),
+            "descrip" => $product->getName(),
+            "KeyWords" => $product->getKeyWords(),
+            "ShoesSizes" => $product->getShoesSizes(),
+            "TshirtSizes" => $product->getTshirtSizes(),
+    ], array('allow_extra_fields' => true))
+            ->add('name', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+            ])
+            ->add('descrip', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'Image',
+                'data_class' => null,
+                'multiple' => true,
+                'required' => false,
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+
+            ])
+            ->add('Category', EntityType::class, [
+                "class" => CategoryProdcut::class,
+                "data" => $product->getCategory(),
+                'attr' => [
+                    'class' => 'form-control',
+                    "readonly" => true
+                ],
+            ])->add('tshirtSizes', EntityType::class, [
+                                "class" => TshirtSizes::class,
+                                "multiple" => true,
+                                'mapped' => false,
+                                "data" => $product->getTshirtSizes(),
+                                "disabled" => count($product->getTshirtSizes()) > 0 ? false : true,
+                                "choices"=> count($product->getTshirtSizes()) >0 ? $tshirtSizesRepository->findAll():[],
+                                "expanded" => true,
+                                'attr' => [
+                                    'class' => 'my-2',
+                                    'label' => 'Choose some sizes'
+                                ],
+                            ])
+                            ->add('shoesSizes', EntityType::class, [
+                                "class" => ShoesSizes::class,
+                                "multiple" => true,
+                                'mapped' => false,
+                                "data" => $product->getShoesSizes(),
+                                "disabled" => count($product->getShoesSizes()) >0 ? false:true,
+                                "choices"=> $shoesSizesRepository->findAll(),
+                                "expanded" => true,
+                                'attr' => [
+                                    'class' => 'my-2',
+                                    'label' => 'Choose some sizes'
+                                ],
+                            ])
+            ->add('KeyWords', EntityType::class, [
+                "class"=> KeyWords::class,
+                'placeholder' => 'Chooses Key words',
+                "label" => "Choose some keywords",
+                "choices"=> $keyWordsRepository->findAll(),
+                "multiple" => true,
+                "choice_label" => "name",
+                "choice_attr" => function ($choice, $key, $value) {
+                    return ['class' => 'form-control'];
+                },
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+            ])
+            ->add('Save', SubmitType::class, [
+                'label' => 'save product',
+                'attr' => [
+                    'class' => 'btn btn-primary mt-2'
+                ],
+            ])
+            ->getForm();
+
+
+        
+        
+            $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid() && $prePoppulate != null) {
+            //  dd($form->getData(),$form->getExtraData());
+            $product->setName($form->getData()['name']);
+            $product->setDescrip($form->getData()['descrip']);
+            $product->setCategory($form->getData()['Category']);
+            
+            $images = $form->get('image')->getData();
+    
+            // On boucle sur les images
+            foreach($images as $image){
+                // On génère un nouveau nom de fichier
+                $fichier = md5(uniqid()).'.'.$image->guessExtension();
+                
+                // On copie le fichier dans le dossier uploads
+                $image->move(
+                    $this->getParameter('images_directory'),
+                    $fichier
+                );
+                
+                // On crée l'image dans la base de données
+                $img = new Images();
+                $img->setName($fichier);
+                $product->addImage($img);
+                // dd($product);
+            }
+
+           
+            if(isset($form->getData()['KeyWords']) && sizeof($form->getData()['KeyWords'])>0){
+                foreach ($form->getData()['KeyWords'] as $value) {
+                    $product->addKeyWord($value);
+                }
+            }
+        
+            if(sizeof($form->getExtraData())>0){
+                
+                if($form->getData()['Category']->getId() == 1){
+                    foreach ($product->getTshirtSizes() as  $value) {
+                        $product->removeTshirtSize($value);
+                    }
+                    foreach ($form->getExtraData()['tshirtSizes'] as $size) {
+                        $product->addTshirtSize($tshirtSizesRepository->find($size));
+                        // dd($product);
+                    }
+                }else{
+                    foreach ($form->getExtraData()['shoesSizes'] as $size) {
+                        $product->addShoesSize($shoesSizesRepository->find($size));
+                    }
+                }
+            }
             $productRepository->add($product, true);
-
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('product/edit.html.twig', [

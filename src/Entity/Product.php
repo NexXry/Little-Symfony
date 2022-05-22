@@ -7,35 +7,51 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['product:read']],
+    collectionOperations: [
+    'get'=>[
+        "method"=>"GET",
+    ]
+],itemOperations: ['get'=>['method'=>'GET']]
+)]
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['product:read'])]
     private $id;
 
+    #[Groups(['product:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    #[Groups(['product:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $descrip;
 
+    #[Groups(['product:read'])]
     #[ORM\ManyToOne(targetEntity: CategoryProdcut::class, inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
     private $Category;
 
+    #[Groups(['product:read'])]
     #[ORM\ManyToMany(targetEntity: KeyWords::class, inversedBy: 'products')]
     private $KeyWords;
 
+    #[Groups(['product:read'])]
     #[ORM\ManyToMany(targetEntity: TshirtSizes::class, inversedBy: 'theProduct')]
     private $tshirtSizes;
 
+    #[Groups(['product:read'])]
     #[ORM\ManyToMany(targetEntity: ShoesSizes::class, inversedBy: 'theProduct')]
     private $shoesSizes;
 
+    #[Groups(['product:read'])]
     #[ORM\OneToMany(mappedBy: 'Product', targetEntity: Images::class,cascade: ['persist'])]
     private $images;
 

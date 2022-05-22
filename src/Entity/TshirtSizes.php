@@ -6,6 +6,7 @@ use App\Repository\TshirtSizesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TshirtSizesRepository::class)]
 class TshirtSizes
@@ -15,11 +16,9 @@ class TshirtSizes
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Groups(['product:read'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
-
-    #[ORM\OneToMany(mappedBy: 'tshirtSizes', targetEntity: Product::class)]
-    private $products;
 
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'tshirtSizes')]
     private $theProduct;

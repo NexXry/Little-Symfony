@@ -1,7 +1,9 @@
-
+{% if formKey is defined %}
+    
 {{ form_start(formKey) }}
     {{ form_widget(formKey) }}
 {{ form_end(formKey) }}
+{% endif %}
 
 
 {{ form_start(form) }}
@@ -13,12 +15,12 @@
 
     window.onload = function() {
         var categ = document.querySelector('#form_Category');
-
+        
     categ.addEventListener("change",function(e) {
         var form = this.closest('form');
         var value =  parseInt(this.value)+1;
         var data = this.name + '=' + value;
-        
+        console.log('OUI');
         fetch(form.action,{
             method: 'POST',
             body: data,
