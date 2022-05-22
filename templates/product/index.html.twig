@@ -18,11 +18,13 @@
         </thead>
         <tbody>
         {% for product in products %}
-            <tr>
+            <>
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.descrip }}</td>
-                <td>{{ product.image }}</td>
+                    {% for item in product.images %}
+                <td>{{ item.name }}</td> 
+                {% endfor %}
                 <td>
                     <a href="{{ path('app_product_show', {'id': product.id}) }}">show</a>
                     <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>

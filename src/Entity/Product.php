@@ -23,10 +23,6 @@ class Product
     #[ORM\Column(type: 'string', length: 255)]
     private $descrip;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $image;
-
-
     #[ORM\ManyToOne(targetEntity: CategoryProdcut::class, inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
     private $Category;
@@ -40,12 +36,16 @@ class Product
     #[ORM\ManyToMany(targetEntity: ShoesSizes::class, inversedBy: 'theProduct')]
     private $shoesSizes;
 
+    #[ORM\OneToMany(mappedBy: 'Product', targetEntity: Images::class,cascade: ['persist'])]
+    private $images;
+
     public function __construct()
     {
         $this->Sizes = new ArrayCollection();
         $this->KeyWords = new ArrayCollection();
         $this->tshirtSizes = new ArrayCollection();
         $this->shoesSizes = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,17 +77,6 @@ class Product
         return $this;
     }
 
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
 
 
 
@@ -179,4 +168,33 @@ class Product
         return $this;
     }
 
+    /**
+     * @return Collection<int, Images>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Images $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Images $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getProduct() === $this) {
+                $image->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
 }

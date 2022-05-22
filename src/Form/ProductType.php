@@ -42,7 +42,7 @@ class ProductType extends AbstractType
                     'class' => 'form-control'
                   ],
             ])
-            ->add('image', FileType::class, [
+            ->add('images', FileType::class, [
                 'label' => 'Image',
                 'data_class' => null,
                 'required' => false,

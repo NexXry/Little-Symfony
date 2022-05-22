@@ -22,7 +22,9 @@
             </tr>
             <tr>
                 <th>Image</th>
-                <td>{{ product.image }}</td>
+                  {% for item in product.images %}
+                <tr> <td>{{ item.name }}</td> </tr>
+                {% endfor %}
             </tr>  
             <tr>
                 <th>Available Sizes</th>
@@ -30,6 +32,12 @@
                 <tr> <td>{{ item.name }}</td> </tr>
                 {% endfor %}
                  {% for item in product.tshirtSizes %}
+                <tr> <td>{{ item.name }}</td> </tr>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th>Available KeyWords</th>
+                {% for item in product.KeyWords %}
                 <tr> <td>{{ item.name }}</td> </tr>
                 {% endfor %}
             </tr>
