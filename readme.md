@@ -7,7 +7,7 @@ git clone https://github.com/NexXry/Little-Symfony.git
 
 ```
 
-Suite à cela in nous faut installer les dépendences du projet.
+Suite à cela il vous faut installer les dépendences du projet.
 
 ``` BASH
 
@@ -19,19 +19,19 @@ npm run build // charger les ASSETS
 
 ```
 
-Une fois cela fait il vous faut configurer le .env au niveau Base de données :
+Une fois cela fait il vous faut configurer le .env au niveau base de données :
 
 ``` BASH
 
 exemple : 
-DATABASE_URL="mysql://NomBASE:MotDePasse@127.0.0.1:3306(3007 SI mariaDB)/hello?serverVersion=10.5.15-MariaDB-1:10.5.15+maria~focal &charset=utf8mb4" (La version de la BDD peut varier ajouter la votre.)
+DATABASE_URL="mysql://NomBASE:MotDePasse@127.0.0.1:3306(3007 SI mariaDB)/hello?serverVersion=10.5.15-MariaDB-1:10.5.15+maria~focal &charset=utf8mb4" (La version de la BDD peut ne peut être la même ajouter la vôtre.)
 
 
 ```
 Nous pouvons maintenant créer la base de données ainsi que les données de test .
 
 ``` BASH
-// Si jamais php bin/console doctrine:database:drop --force permet la suppresion de la base en cas de rater
+// Si jamais php bin/console doctrine:database:drop --force permet la suppression de la base en cas de rater
 
 Pour créer la base : php bin/console doctrine:database:create
 
