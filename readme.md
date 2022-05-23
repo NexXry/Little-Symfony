@@ -41,3 +41,12 @@ Pour ajouter les données : php bin/console doctrine:fixtures:load ( Careful, da
  > Press yes) 
 
 ```
+
+Puis lancer le serveur de dev : 
+``` BASH
+symfony server:start
+
+```
+
+Login : email : admin@hellorse.fr
+password : hellorse
