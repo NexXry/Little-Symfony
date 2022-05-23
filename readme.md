@@ -1,13 +1,13 @@
-Au préalable vous aurez besion d'un environement comprenent MYSQL ou MARIADB ET PHP >=8.0.2
+Au préalable vous aurez besoin d'un environnement comprenant MYSQL ou MARIADB ET PHP >=8.0.2
 
-Afin de recupérer le projet je vous invite a réaliser la commande suivante :
+Afin de récupérer le projet je vous invite à réaliser la commande suivante :
 
 ``` BASH
 git clone https://github.com/NexXry/Little-Symfony.git
 
 ```
 
-Suite a cela in nous faut installer les dépendences du projet.
+Suite à cela in nous faut installer les dépendences du projet.
 
 ``` BASH
 
@@ -28,7 +28,7 @@ DATABASE_URL="mysql://NomBASE:MotDePasse@127.0.0.1:3306(3007 SI mariaDB)/hello?s
 
 
 ```
-Nous pouvons maintenant créer la base de données ainsi que les donnée de  test .
+Nous pouvons maintenant créer la base de données ainsi que les données de test .
 
 ``` BASH
 // Si jamais php bin/console doctrine:database:drop --force permet la suppresion de la base en cas de rater
