@@ -110,6 +110,13 @@ class User implements UserInterface,PasswordAuthenticatedUserInterface
         return array_unique($roles);
     }
 
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+    
+        return $this;
+    }
+
     public function getSalt()
     {
         // leaving blank - I don't need/have a password!

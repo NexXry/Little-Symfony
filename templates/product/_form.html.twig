@@ -32,12 +32,12 @@
         }).then(function(html) {
             var content = document.createElement('html');
             content.innerHTML = html;
-            if(value === 1){
+            if(value === 2){
             if(document.querySelector("#form_shoesSizes") != null){
                 document.querySelector("#form_shoesSizes").remove()
             } 
             var nouveau = content.querySelector('#form_tshirtSizes');
-            } else{
+            } else if (value === 3){
                 if(document.querySelector("#form_tshirtSizes") != null){
                 document.querySelector("#form_tshirtSizes").remove()
             } 

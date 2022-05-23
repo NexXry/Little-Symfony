@@ -13,7 +13,6 @@ class CategoryProdcut
 {
     #[ORM\Id]
     #[Groups(['product:read'])]
-    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
@@ -32,6 +31,10 @@ class CategoryProdcut
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId($id){
+        $this->id = $id;
     }
 
     public function getName(): ?string
