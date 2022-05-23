@@ -101,7 +101,7 @@ class ProductRepository extends ServiceEntityRepository
                 $requete->setParameter('tshirt', $arr, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
 
                 $requete ->orderBy('c.name',"DESC");
-                dd($requete->getQuery()->getResult());
+           
                 return $requete->getQuery()->getResult();
             break;
             case ($data[0]!=null && $data[1]!=null) && (($data[2]?->isEmpty() || $data[2] == null) && ($data[3]?->isEmpty() || $data[3] == null)):

@@ -30,10 +30,15 @@
                                     <!-- Product reviews-->
                                     <div class="d-flex justify-content-center small text-warning mb-2">
                                         <div class="bi-star-fill">{{product.Category.name }}</div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
+                                    </div> 
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi-star-fill">  
+                                        {% for sizes in product.tshirtSizes %}
+                                                {{ sizes.name }}
+                                            {% endfor %}</div>
+                                          {% for sizes in product.shoesSizes %}
+                                                {{ sizes.name }}
+                                            {% endfor %}
                                     </div>
                                     <!-- Product price-->
                                     {# <span class="text-muted text-decoration-line-through">$20.00</span> #}

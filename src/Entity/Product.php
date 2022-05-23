@@ -52,7 +52,7 @@ class Product
     private $shoesSizes;
 
     #[Groups(['product:read'])]
-    #[ORM\OneToMany(mappedBy: 'Product', targetEntity: Images::class,cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'Product', targetEntity: Images::class,cascade: ['persist',"remove"])]
     private $images;
 
     #[ORM\Column(type: 'float')]

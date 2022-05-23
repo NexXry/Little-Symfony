@@ -125,7 +125,7 @@ class ProductController extends AbstractController
                 $form = $event->getForm();
                 if ($categ != null && isset($categ['Category'])) {
                     if (!is_array($categ['Category'])) {
-                        if ($categ['Category']->getId() == 1) {
+                        if ($categ['Category']->getId() == 2) {
                             $form->add('tshirtSizes', EntityType::class, [
                                 "class" => TshirtSizes::class,
                                 "multiple" => true,
@@ -136,7 +136,7 @@ class ProductController extends AbstractController
                                     'label' => 'Choose some sizes'
                                 ],
                             ]);
-                        } else {
+                        } else if ($categ['Category']->getId() == 3) {
                             $form->add('shoesSizes', EntityType::class, [
                                 "class" => ShoesSizes::class,
                                 "multiple" => true,
@@ -193,12 +193,14 @@ class ProductController extends AbstractController
                 }
             }
         
+           
             if(sizeof($form->getExtraData())>0){
-                if($form->getData()['Category']->getId() == 1){
+                if($form->getData()['Category']->getId() == 2){
                     foreach ($form->getExtraData()['tshirtSizes'] as $size) {
                         $product->addTshirtSize($tshirtSizesRepository->find($size));
                     }
-                }else{
+                }
+                 if($form->getData()['Category']->getId() == 3){
                     foreach ($form->getExtraData()['shoesSizes'] as $size) {
                         $product->addShoesSize($shoesSizesRepository->find($size));
                     }
