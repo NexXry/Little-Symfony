@@ -21,6 +21,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormEvent;
@@ -70,6 +72,11 @@ class ProductController extends AbstractController
                 ],
             ])
             ->add('descrip', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+            ])
+            ->add('price', NumberType::class, [
                 'attr' => [
                     'class' => 'form-control'
                 ],
@@ -157,6 +164,7 @@ class ProductController extends AbstractController
             $product->setName($form->getData()['name']);
             $product->setDescrip($form->getData()['descrip']);
             $product->setCategory($form->getData()['Category']);
+            $product->setPrice($form->getData()['price']);
             
             $images = $form->get('image')->getData();
     
@@ -256,6 +264,7 @@ class ProductController extends AbstractController
             "KeyWords" => $product->getKeyWords(),
             "ShoesSizes" => $product->getShoesSizes(),
             "TshirtSizes" => $product->getTshirtSizes(),
+            "price" => $product->getPrice(),
     ], array('allow_extra_fields' => true))
             ->add('name', TextType::class, [
                 'attr' => [
@@ -263,6 +272,11 @@ class ProductController extends AbstractController
                 ],
             ])
             ->add('descrip', TextType::class, [
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+            ])
+            ->add('price', NumberType::class, [
                 'attr' => [
                     'class' => 'form-control'
                 ],
@@ -342,7 +356,8 @@ class ProductController extends AbstractController
             //  dd($form->getData(),$form->getExtraData());
             $product->setName($form->getData()['name']);
             $product->setDescrip($form->getData()['descrip']);
-            $product->setCategory($form->getData()['Category']);
+            $product->setCategory($form->getData()['Category']); 
+            $product->setPrice($form->getData()['price']); 
             
             $images = $form->get('image')->getData();
     

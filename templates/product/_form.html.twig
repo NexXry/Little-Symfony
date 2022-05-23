@@ -18,7 +18,7 @@
         
     categ.addEventListener("change",function(e) {
         var form = this.closest('form');
-        var value =  parseInt(this.value)+1;
+        var value =  parseInt(this.value);
         var data = this.name + '=' + value;
         console.log('OUI');
         fetch(form.action,{
@@ -44,9 +44,10 @@
             var nouveau = content.querySelector('#form_shoesSizes');
             }
         
-      
-            
+      if(nouveau !== null){
             document.querySelector('#form_Category').after(nouveau);
+            }
+            
             
         });
 

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -42,17 +43,86 @@ class ProductRepository extends ServiceEntityRepository
 //    /**
 //     * @return Product[] Returns an array of Product objects
 //     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+  
+   
+   public function findByKeyWordOrCategAndOrSizes($valueK,$valueC,$valueT,$valueS): array
+   {
+
+   
+
+       $data=[
+        $valueK,$valueC,$valueT,$valueS
+       ];
+
+    //    dd($data);
+
+    $requete = $this->createQueryBuilder('p')
+    ->leftJoin("p.shoesSizes", "s")
+    ->leftJoin("p.tshirtSizes", "t")
+    ->leftJoin("p.KeyWords", "k")
+    ->innerJoin("p.Category", "c");
+
+  /*
+   ->orderBy('c.id',"DESC")
+   ->getQuery()
+   ->getResult()
+  */
+
+    switch ($data) {
+            case ($data[0]==null && $data[1]==null) && ($data[2] ==null && $data[3] ==null):
+                return self::findAll();
+            break;
+            case ($data[0]!=null && $data[1]==null) && ($data[2] ==null && $data[3] ==null):
+                $requete->andWhere('k.name = :keywords')
+                ->setParameter('keywords', $data[0])
+                 ->orderBy('k.name',"DESC")
+                ;
+
+                return $requete->getQuery()->getResult();
+            break;
+            case ($data[0] == null && $data[1]!=null) && (($data[2]?->isEmpty() || $data[2] == null) &&($data[3]?->isEmpty() || $data[3] == null)):
+                // dd($data[1]->getName());
+                $requete->andWhere('c.name = :categorie')
+                ->setParameter('categorie', $data[1]->getName())
+                 ->orderBy('c.name',"DESC")
+                ;
+             
+                return $requete->getQuery()->getResult();
+            break;
+            case ($data[0] ==null && $data[1]!=null) && (($data[2] != [] || $data[2] == null) && ($data[3] != [] || $data[3] == null)):
+                // dd("categ and sizes");
+                $requete->andWhere($requete->expr()->in('t.name', ':tshirt').' or '.$requete->expr()->in('s.name', ':tshirt').'and c.name = :categorie')
+                ->setParameter('categorie', $data[1]->getName());
+            
+                $arr=[];
+                foreach ($data[2] != null ? $data[2] : $data[3] as $value) {
+                    $arr[]=$value->getName();
+                }
+                $requete->setParameter('tshirt', $arr, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
+
+                $requete ->orderBy('c.name',"DESC");
+                dd($requete->getQuery()->getResult());
+                return $requete->getQuery()->getResult();
+            break;
+            case ($data[0]!=null && $data[1]!=null) && (($data[2]?->isEmpty() || $data[2] == null) && ($data[3]?->isEmpty() || $data[3] == null)):
+                $requete->andWhere('k.name = :keywords or c.name = :categorie')
+                ->setParameter('categorie', $data[1]->getName())
+                ->setParameter('keywords', $data[0])
+                 ->orderBy('c.name',"DESC")
+                ;
+
+                return $requete->getQuery()->getResult();
+            break;
+            // case ($data[0]!=null && $data[1]!=null) && ($data[2] != [] || $data[2] == null && $data[3] != [] || $data[3] == null):
+            //     dd("keyword and categ and sizes");
+            // break;
+        default:
+            return self::findAll();
+            break;
+    }
+
+
+   }
 
 //    public function findOneBySomeField($value): ?Product
 //    {
