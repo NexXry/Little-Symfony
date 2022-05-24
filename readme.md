@@ -37,7 +37,8 @@ Pour créer la base : php bin/console doctrine:database:create
 
 Pour créer les tables : php bin/console doctrine:schema:create
 
-Pour ajouter les données : php bin/console doctrine:fixtures:load ( Careful, database "hello" will be purged. Do you want to continue? (yes/no) [no]:
+Pour ajouter les données : php bin/console doctrine:fixtures:load    :
+( Careful, database "hello" will be purged. Do you want to continue? (yes/no) [no]:
  > Press yes) 
 
 ```
